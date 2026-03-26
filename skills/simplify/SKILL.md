@@ -1,0 +1,36 @@
+---
+name: simplify
+description: "Reduce the number of colors in an SVG using quantization. Triggers on: simplify svg, reduce svg colors, fewer colors, quantize svg, minimize svg colors."
+---
+
+# Simplify SVG Colors
+
+Reduce the number of unique colors in an SVG using median-cut quantization.
+
+## Prerequisites
+
+The `SVG_NEW_API_KEY` environment variable must be set.
+
+## Steps
+
+1. Read the SVG file specified by the user or `$ARGUMENTS`
+2. Determine `max_colors` — ask the user if not specified (common values: 2, 4, 8, 16)
+3. Call the API:
+
+```bash
+curl -s -X POST "${SVG_NEW_API_URL:-https://svg.new}/api/agent/edit/simplify" \
+  -H "Authorization: Bearer $SVG_NEW_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d "{\"svg\": \"$SVG_CONTENT\", \"max_colors\": $MAX_COLORS}"
+```
+
+4. The response includes `colors_before`, `colors_after`, and the modified `svg`
+5. Report the color reduction to the user
+6. Write the simplified SVG to the file
+
+## Notes
+
+- This operation is free (no credits consumed)
+- `max_colors` range: 1–256
+- Similar colors are merged together; distant colors stay distinct
+- Shapes with `fill="none"` are not affected

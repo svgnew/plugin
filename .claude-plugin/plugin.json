@@ -1,0 +1,20 @@
+{
+  "name": "svg-vectorizer",
+  "description": "Convert images to SVG vectors, edit colors, simplify paths, remove backgrounds, and batch process — powered by svg.new",
+  "version": "1.0.0",
+  "author": {
+    "name": "svg.new",
+    "email": "contact@svg.new"
+  },
+  "homepage": "https://svg.new",
+  "repository": "https://github.com/svgnew/plugin",
+  "license": "MIT",
+  "keywords": [
+    "svg",
+    "vectorize",
+    "image-conversion",
+    "vector-graphics",
+    "tracing",
+    "design"
+  ]
+}
