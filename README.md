@@ -19,14 +19,14 @@ mkdir -p ~/.claude/skills/svg-new && curl -s https://svg.new/skill.md -o ~/.clau
 
 ### Option 3: MCP server
 
-Add to your Claude Code MCP config (`~/.claude/.mcp.json`):
+Add to your Claude Code MCP config (`~/.claude/.mcp.json`), or run `claude mcp add svg-new -e SVG_NEW_API_KEY=svk_your_key_here -- npx -y @svgnew/mcp`:
 
 ```json
 {
   "mcpServers": {
     "svg-new": {
       "command": "npx",
-      "args": ["tsx", "path/to/svg.new/src/mcp/server.ts"],
+      "args": ["-y", "@svgnew/mcp"],
       "env": {
         "SVG_NEW_API_KEY": "svk_your_key_here"
       }
@@ -37,7 +37,7 @@ Add to your Claude Code MCP config (`~/.claude/.mcp.json`):
 
 ## Setup
 
-1. Sign up at [svg.new](https://svg.new) (Pro plan required for API access)
+1. Sign up at [svg.new](https://svg.new). Free accounts get 3 vectorizations a day; Pro gets 1,000 a month.
 2. Generate an API key at [svg.new/account](https://svg.new/account)
 3. Set your key: `export SVG_NEW_API_KEY="svk_..."`
 
