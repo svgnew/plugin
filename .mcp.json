@@ -2,7 +2,7 @@
   "mcpServers": {
     "svg-new": {
       "command": "npx",
-      "args": ["tsx", "${CLAUDE_PLUGIN_ROOT}/../src/mcp/server.ts"],
+      "args": ["-y", "@svgnew/mcp"],
       "env": {
         "SVG_NEW_API_KEY": "${user_config.api_key}",
         "SVG_NEW_API_URL": "${user_config.api_url}"
