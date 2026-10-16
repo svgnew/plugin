@@ -14,7 +14,7 @@ Use the svg.new MCP tools (`mcp__svgnew__*`) if they are available in this sessi
 
 Do not fall back to a local tracer (vtracer, potrace) unless the user asks for one.
 
-Files over ~100 KB are too big to pass inline to the MCP `vectorize` tool. Call `create_upload`, run the curl command it returns with the file's path, then call `vectorize` with the `upload_id` (any local file up to 2.9 MB, no key needed). If the image is at a public HTTPS URL, `image_url` also works. Otherwise use the curl route below, which builds the base64 in the shell. Results over 64 KB come back as a one-hour download link; save it with `curl -sL -o output.svg "<link>"`.
+Files over ~100 KB are too big to pass inline to the MCP `vectorize` tool. Call `create_upload`, run the curl PUT command it returns with the file's path (up to 20 MB, straight to svg.new's storage), then call `vectorize` with the `upload_id`; the result comes back as a one-hour download link (`curl -sL -o output.svg "<link>"`). If the image is at a public HTTPS URL, `image_url` also works (under 2.9 MB). Otherwise use the curl route below, which builds the base64 in the shell.
 ## Steps
 
 1. Identify the image file from the user's request or `$ARGUMENTS`
