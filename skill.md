@@ -9,7 +9,7 @@ Convert raster images (PNG, JPG, WebP) to clean, scalable SVG vectors using the 
 
 ## Which route to use
 
-1. **MCP server (preferred).** If tools named `mcp__svgnew__*` (or `mcp__svg-new__*`) are available in this session, use them and skip everything below: `create_upload` + `vectorize` with `upload_id` (any local file), `vectorize` with `image` (small files inline) or `image_url` (a public HTTPS link), `vectorize_file` (a ChatGPT-style file object), `recolor_svg`, `simplify_svg`, `remove_background`, `batch_vectorize` / `get_batch_status`, `list_vectorizations`. They need no API key or environment variable: the server is authenticated with the user's svg.new login, and the SVG comes back inline as text.
+1. **MCP server (preferred).** If tools named `mcp__svgnew__*` (or `mcp__svg-new__*`) are available in this session, use them and skip everything below: `create_upload` + `vectorize` with `upload_id` (any local file up to 20 MB), `vectorize` with `image` (small files inline) or `image_url` (a public HTTPS link), `vectorize_file` (a ChatGPT-style file object), `recolor_svg`, `simplify_svg`, `remove_background`, `batch_vectorize` / `get_batch_status`, `list_vectorizations`. They need no API key or environment variable: the server is authenticated with the user's svg.new login, and the SVG comes back inline as text.
 2. **REST API.** Otherwise, if `SVG_NEW_API_KEY` is set, use the curl commands below.
 3. **Neither available.** Tell the user how to connect and stop there:
    - MCP: `claude mcp add --transport http --scope user svgnew https://svg.new/api/mcp`, then `/mcp` → svgnew → Authenticate; or
@@ -17,15 +17,14 @@ Convert raster images (PNG, JPG, WebP) to clean, scalable SVG vectors using the 
 
    Never substitute a local tracer (vtracer, potrace, ImageMagick, autotrace) for svg.new unless the user asks for one.
 
-### Large local files
+### Large files
 
-The MCP `vectorize` tool takes the image inline as a base64 data URL, which is only practical up to roughly 100 KB (the base64 has to pass through the model). For anything bigger, in order of preference:
+Every tool accepts its inputs by reference, so nothing large has to pass through the model:
 
-- **Upload (any local file up to 20 MB, no key)**: call `create_upload`; it returns a curl `PUT` command (the file goes straight to svg.new's storage) and an `upload_id`. Run the command with the file's path and its Content-Type, then call `vectorize` with `{ "upload_id": "…" }`. Uploads last 15 minutes and work once; PNG, JPEG or WebP. The result of a storage-backed upload always comes back as a download link. `remove_background` and `batch_vectorize` take `upload_id` / `upload_ids` too, but only up to 2.9 MB (they send the image inline to the API).
-- **`image_url`**: if the image is already at a public HTTPS URL (direct link, no redirect, under 2.9 MB), pass `{ "image_url": "<url>" }` — the server fetches it. Also on `remove_background`; `batch_vectorize` takes `image_urls`.
-- **REST API with curl**: with `SVG_NEW_API_KEY` set, the curl command below builds the base64 in the shell (up to 20 MB).
-
-Results over 64 KB come back as a one-hour download link instead of inline SVG text (`output: "url"` asks for the link always, `output: "inline"` never); save it with `curl -sL -o output.svg "<link>"`.
+- **Images** (`vectorize`, `remove_background`, `batch_vectorize`): `image` inline as a base64 data URL (practical up to ~100 KB), `image_url` (public HTTPS, direct link, up to 20 MB; the API fetches it) or `upload_id` (any local file up to 20 MB): call `create_upload`, run the curl `PUT` command it returns with the file's path and Content-Type (the file goes straight to svg.new's storage), then pass the `upload_id`. Uploads work once and last two hours. `batch_vectorize` takes `image_urls` / `upload_ids` lists.
+- **SVGs** (`recolor_svg`, `simplify_svg`, `remove_background`): `svg` inline, or `svg_url` (public HTTPS, up to 20 MB) — the download link from a previous result works directly.
+- **Results**: inline when small (SVGs up to 64 KB from vectorize; the editing tools up to 3 MB), otherwise a one-hour download link (`output: "url"` asks for a link always; `output: "inline"` never, for vectorize). Save with `curl -sL -o output.svg "<link>"`. `remove_background` also links the transparent PNG when large.
+- **REST API with curl**: with `SVG_NEW_API_KEY` set, the same fields work on the endpoints below; the curl command builds the base64 in the shell (up to 20 MB).
 
 ## Setup
 

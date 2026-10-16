@@ -13,6 +13,8 @@ Use the svg.new MCP tools (`mcp__svgnew__*`) if they are available in this sessi
 > Connect svg.new with `claude mcp add --transport http --scope user svgnew https://svg.new/api/mcp` and `/mcp` → Authenticate, or generate an API key at https://svg.new/account and set `export SVG_NEW_API_KEY="svk_..."`.
 
 Do not fall back to a local tracer (vtracer, potrace) unless the user asks for one.
+
+Large inputs go by reference: `svg_url` for the SVG (e.g. the download link a previous result gave), `image_url` or `upload_id` (from `create_upload`) for rasters, each up to 20 MB; large results come back as one-hour download links.
 ## Steps
 
 1. Read the SVG file specified by the user or `$ARGUMENTS`
