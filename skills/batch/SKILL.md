@@ -5,43 +5,22 @@ description: "Batch vectorize multiple images to SVG at once. Triggers on: batch
 
 # Batch Vectorize Images
 
-Submit multiple images for vectorization in a single batch job.
+Vectorize several images in one batch job.
 
-## Prerequisites
+## Before you start
 
-Use the svg.new MCP tools if they are available in this session (`mcp__svgnew__*`, or `mcp__plugin_svg-vectorizer_svg-new__*` when this plugin provides them); they need no API key. Otherwise the `SVG_NEW_API_KEY` environment variable must be set. If neither is available, tell the user:
-> Connect svg.new with `claude mcp add --transport http --scope user svgnew https://svg.new/api/mcp` and `/mcp` → Authenticate, or generate an API key at https://svg.new/account and set `export SVG_NEW_API_KEY="svk_..."`.
+Use the svg.new MCP tools from this plugin (named `mcp__plugin_svg-vectorizer_svg-new__*`, or `mcp__svgnew__*` if the user connected the server directly). They sign in with the user's svg.new account, so no API key is involved. If the tools are missing or say sign-in is needed, ask the user to run `/mcp`, pick the svg.new server and choose **Authenticate**.
 
-Do not fall back to a local tracer (vtracer, potrace) unless the user asks for one.
+Don't fall back to a local tracer (vtracer, potrace) unless the user asks for one.
+
 ## Steps
 
-1. Identify the images to process — glob for files if the user specifies a directory or pattern
-2. For each image, base64-encode it with the appropriate data URL prefix
-3. Submit the batch (max 50 images):
-
-```bash
-curl -s -X POST "${SVG_NEW_API_URL:-https://svg.new}/api/agent/batch" \
-  -H "Authorization: Bearer $SVG_NEW_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{"images": [{"image": "data:image/png;base64,..."}, ...]}'
-```
-
-4. Extract the `batch_id` from the 202 response
-5. Poll for completion:
-
-```bash
-curl -s "${SVG_NEW_API_URL:-https://svg.new}/api/agent/batch/$BATCH_ID" \
-  -H "Authorization: Bearer $SVG_NEW_API_KEY"
-```
-
-6. When `status` is `completed`, download each item's SVG from its `svg_url`
-7. Save each SVG alongside the original image (same name, `.svg` extension)
-8. Report results: total processed, succeeded, failed
+1. Find the images. Glob for files if the user names a folder or pattern. A batch holds up to 10 images; split larger sets into several batches.
+2. Call `batch_vectorize` with the images as `image_urls` (public links), `images` (base64 data URLs, for small files) or `upload_ids` (files uploaded with `create_upload`, up to 20 MB each). These can be mixed.
+3. Note the batch ID it returns, then call `get_batch_status` every few seconds until the status is `completed` or `failed`.
+4. For each completed item, download its SVG from the link `get_batch_status` lists (valid for one hour) with `curl -sL -o <name>.svg "<link>"`, next to the original image.
+5. Report how many succeeded and failed. Items can fail on their own without failing the batch.
 
 ## Notes
 
-- Maximum 50 images per batch
-- Each image costs 1 credit
-- Check credits before submitting — the API returns 402 if insufficient
-- Poll every 5 seconds until `status` is `completed` or `failed`
-- Individual items can fail without failing the whole batch — check each item's `status`
+- Each image costs 1 credit. If the account runs short, the batch is refused before it starts.
