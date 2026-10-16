@@ -9,7 +9,7 @@ Convert raster images (PNG, JPG, WebP) to clean, scalable SVG vectors using the 
 
 ## Which route to use
 
-1. **MCP server (preferred).** If tools named `mcp__svgnew__*` (or `mcp__svg-new__*`) are available in this session, use them and skip everything below: `create_upload` + `vectorize` with `upload_id` (any local file up to 20 MB), `vectorize` with `image` (small files inline) or `image_url` (a public HTTPS link), `vectorize_file` (a ChatGPT-style file object), `recolor_svg`, `simplify_svg`, `remove_background`, `batch_vectorize` / `get_batch_status`, `list_vectorizations`. They need no API key or environment variable: the server is authenticated with the user's svg.new login, and the SVG comes back inline as text.
+1. **MCP server (preferred).** If tools named `mcp__svgnew__*` (or `mcp__svg-new__*`, or `mcp__plugin_svg-vectorizer_svg-new__*` from the Claude plugin) are available in this session, use them and skip everything below: `create_upload` + `vectorize` with `upload_id` (any local file up to 20 MB), `vectorize` with `image` (small files inline) or `image_url` (a public HTTPS link), `vectorize_file` (a ChatGPT-style file object), `recolor_svg`, `simplify_svg`, `remove_background`, `batch_vectorize` / `get_batch_status`, `list_vectorizations`. They need no API key or environment variable: the server is authenticated with the user's svg.new login, and the SVG comes back inline as text.
 2. **REST API.** Otherwise, if `SVG_NEW_API_KEY` is set, use the curl commands below.
 3. **Neither available.** Tell the user how to connect and stop there:
    - MCP: `claude mcp add --transport http --scope user svgnew https://svg.new/api/mcp`, then `/mcp` → svgnew → Authenticate; or

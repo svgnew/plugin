@@ -1,24 +1,8 @@
 {
   "mcpServers": {
     "svg-new": {
-      "command": "npx",
-      "args": ["-y", "@svgnew/mcp"],
-      "env": {
-        "SVG_NEW_API_KEY": "${user_config.api_key}",
-        "SVG_NEW_API_URL": "${user_config.api_url}"
-      }
-    }
-  },
-  "userConfig": {
-    "api_key": {
-      "description": "Your svg.new API key (generate at https://svg.new/account)",
-      "sensitive": true,
-      "required": true
-    },
-    "api_url": {
-      "description": "SVG.new API URL (default: https://svg.new)",
-      "default": "https://svg.new",
-      "required": false
+      "type": "http",
+      "url": "https://svg.new/api/mcp"
     }
   }
 }

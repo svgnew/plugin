@@ -2,44 +2,44 @@
 
 Convert images to SVG vectors, edit colors, simplify paths, remove backgrounds, and batch process — directly from Claude Code.
 
+The plugin connects Claude to the hosted svg.new MCP server (`https://svg.new/api/mcp`) and adds skills that tell Claude when and how to use it. You sign in with your svg.new account; there is no API key to copy.
+
 ## Install
 
 ### Option 1: Plugin marketplace (recommended)
 
 ```
 /plugin marketplace add svgnew/plugin
-/plugin install svg-vectorizer
+/plugin install svg-vectorizer@svg-new-tools
 ```
 
-### Option 2: One-liner skill install
+Then run `/mcp`, pick the `svg-new` server from the plugin, and choose **Authenticate** to sign in to svg.new in your browser.
+
+### Option 2: Only the MCP server
+
+```bash
+claude mcp add --transport http --scope user svgnew https://svg.new/api/mcp
+```
+
+Then `/mcp` → `svgnew` → **Authenticate**. The same URL works as a custom connector in the Claude apps and in any MCP client that supports OAuth.
+
+### Option 3: Local MCP server with an API key
+
+For MCP clients without OAuth, run the npm package with an API key from [svg.new/account](https://svg.new/account):
+
+```bash
+claude mcp add svg-new -e SVG_NEW_API_KEY=svk_your_key_here -- npx -y @svgnew/mcp
+```
+
+### Option 4: Skill only
 
 ```bash
 mkdir -p ~/.claude/skills/svg-new && curl -s https://svg.new/skill.md -o ~/.claude/skills/svg-new/SKILL.md
 ```
 
-### Option 3: MCP server
+## Accounts and credits
 
-Add to your Claude Code MCP config (`~/.claude/.mcp.json`), or run `claude mcp add svg-new -e SVG_NEW_API_KEY=svk_your_key_here -- npx -y @svgnew/mcp`:
-
-```json
-{
-  "mcpServers": {
-    "svg-new": {
-      "command": "npx",
-      "args": ["-y", "@svgnew/mcp"],
-      "env": {
-        "SVG_NEW_API_KEY": "svk_your_key_here"
-      }
-    }
-  }
-}
-```
-
-## Setup
-
-1. Sign up at [svg.new](https://svg.new). Free accounts get 3 vectorizations a day; Pro gets 1,000 a month.
-2. Generate an API key at [svg.new/account](https://svg.new/account)
-3. Set your key: `export SVG_NEW_API_KEY="svk_..."`
+Sign up at [svg.new](https://svg.new). Free accounts get 3 vectorizations a day; Pro gets 1,000 a month. Vectorizing and background removal use credits; recoloring and simplifying are free.
 
 ## Available Skills
 
@@ -59,15 +59,24 @@ Or just ask naturally — the skills trigger automatically:
 
 ## MCP Tools
 
-When using the MCP server, these tools are available to any MCP-compatible client:
-
-- `vectorize` — Convert image to SVG
+- `vectorize` — Convert a PNG, JPEG or WebP image to SVG (inline, by public URL, or by `upload_id`)
+- `create_upload` — Get an upload link for sending a local image up to 20 MB without pasting it into the chat
 - `recolor_svg` — Change SVG colors
-- `simplify_svg` — Reduce color palette
-- `remove_background` — AI background removal
-- `batch_vectorize` — Process multiple images
-- `get_batch_status` — Poll batch progress
-- `list_vectorizations` — View history
+- `simplify_svg` — Reduce an SVG's color palette
+- `remove_background` — Remove an SVG's background using the original image
+- `batch_vectorize` / `get_batch_status` — Process many images and poll progress
+- `list_vectorizations` — View your recent conversions
+- `vectorize_file`, `remove_background_file`, `batch_vectorize_files` — The same, for clients that pass attached files
+
+Large inputs go by reference (`image_url`, `upload_id`, `svg_url`), and large results come back as one-hour download links.
+
+## Privacy
+
+svg.new processes the images and SVGs you send it to produce your results and keeps your conversion history in your account. See the [privacy policy](https://svg.new/privacy) and [terms](https://svg.new/terms).
+
+## Support
+
+[svg.new/support](https://svg.new/support) or contact@svg.new.
 
 ## Links
 
