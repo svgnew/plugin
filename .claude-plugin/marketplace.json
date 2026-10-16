@@ -1,21 +1,21 @@
 {
   "name": "svg-new-tools",
   "owner": {
-    "name": "svg.new",
+    "name": "SVG.new",
     "email": "contact@svg.new"
   },
   "metadata": {
     "description": "AI-powered image to SVG vectorization, editing, and batch processing",
-    "version": "1.1.1"
+    "version": "1.1.2"
   },
   "plugins": [
     {
       "name": "svg-vectorizer",
       "source": ".",
       "description": "Convert images to SVG vectors, edit colors, simplify paths, remove backgrounds, and batch process",
-      "version": "1.1.1",
+      "version": "1.1.2",
       "author": {
-        "name": "svg.new"
+        "name": "SVG.new"
       },
       "homepage": "https://svg.new",
       "repository": "https://github.com/svgnew/plugin",
