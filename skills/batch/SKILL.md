@@ -9,8 +9,10 @@ Submit multiple images for vectorization in a single batch job.
 
 ## Prerequisites
 
-The `SVG_NEW_API_KEY` environment variable must be set.
+Use the svg.new MCP tools (`mcp__svgnew__*`) if they are available in this session; they need no API key. Otherwise the `SVG_NEW_API_KEY` environment variable must be set. If neither is available, tell the user:
+> Connect svg.new with `claude mcp add --transport http --scope user svgnew https://svg.new/api/mcp` and `/mcp` → Authenticate, or generate an API key at https://svg.new/account and set `export SVG_NEW_API_KEY="svk_..."`.
 
+Do not fall back to a local tracer (vtracer, potrace) unless the user asks for one.
 ## Steps
 
 1. Identify the images to process — glob for files if the user specifies a directory or pattern

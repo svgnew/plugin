@@ -9,8 +9,10 @@ Reduce the number of unique colors in an SVG using median-cut quantization.
 
 ## Prerequisites
 
-The `SVG_NEW_API_KEY` environment variable must be set.
+Use the svg.new MCP tools (`mcp__svgnew__*`) if they are available in this session; they need no API key. Otherwise the `SVG_NEW_API_KEY` environment variable must be set. If neither is available, tell the user:
+> Connect svg.new with `claude mcp add --transport http --scope user svgnew https://svg.new/api/mcp` and `/mcp` → Authenticate, or generate an API key at https://svg.new/account and set `export SVG_NEW_API_KEY="svk_..."`.
 
+Do not fall back to a local tracer (vtracer, potrace) unless the user asks for one.
 ## Steps
 
 1. Read the SVG file specified by the user or `$ARGUMENTS`

@@ -9,9 +9,12 @@ Convert a raster image to a clean SVG vector using svg.new's AI tracing engine.
 
 ## Prerequisites
 
-The `SVG_NEW_API_KEY` environment variable must be set. If not, tell the user:
-> Generate an API key at https://svg.new/account, then set `export SVG_NEW_API_KEY="svk_..."`.
+Use the svg.new MCP tools (`mcp__svgnew__*`) if they are available in this session; they need no API key. Otherwise the `SVG_NEW_API_KEY` environment variable must be set. If neither is available, tell the user:
+> Connect svg.new with `claude mcp add --transport http --scope user svgnew https://svg.new/api/mcp` and `/mcp` → Authenticate, or generate an API key at https://svg.new/account and set `export SVG_NEW_API_KEY="svk_..."`.
 
+Do not fall back to a local tracer (vtracer, potrace) unless the user asks for one.
+
+Files over ~100 KB are too big to pass inline to the MCP `vectorize` tool. Call `create_upload`, run the curl command it returns with the file's path, then call `vectorize` with the `upload_id` (any local file up to 2.9 MB, no key needed). If the image is at a public HTTPS URL, `image_url` also works. Otherwise use the curl route below, which builds the base64 in the shell. Results over 64 KB come back as a one-hour download link; save it with `curl -sL -o output.svg "<link>"`.
 ## Steps
 
 1. Identify the image file from the user's request or `$ARGUMENTS`
