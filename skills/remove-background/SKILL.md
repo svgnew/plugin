@@ -1,39 +1,26 @@
 ---
 name: remove-background
-description: "Remove the background from an SVG using AI. Requires the original raster image. Triggers on: remove background, remove bg, transparent background, cut out background."
+description: "Remove the background from an SVG using the original raster image. Triggers on: remove background, remove bg, transparent background, cut out background."
 ---
 
 # Remove SVG Background
 
-Remove the background from an SVG using AI-powered background detection on the original raster image.
+Remove the background from an SVG, using background detection on the original raster image.
 
-## Prerequisites
+## Before you start
 
-Use the svg.new MCP tools if they are available in this session (`mcp__svgnew__*`, or `mcp__plugin_svg-vectorizer_svg-new__*` when this plugin provides them); they need no API key. Otherwise the `SVG_NEW_API_KEY` environment variable must be set. If neither is available, tell the user:
-> Connect svg.new with `claude mcp add --transport http --scope user svgnew https://svg.new/api/mcp` and `/mcp` → Authenticate, or generate an API key at https://svg.new/account and set `export SVG_NEW_API_KEY="svk_..."`.
+Use the svg.new MCP tools from this plugin (named `mcp__plugin_svg-vectorizer_svg-new__*`, or `mcp__svgnew__*` if the user connected the server directly). They sign in with the user's svg.new account, so no API key is involved. If the tools are missing or say sign-in is needed, ask the user to run `/mcp`, pick the svg.new server and choose **Authenticate**.
 
-Do not fall back to a local tracer (vtracer, potrace) unless the user asks for one.
-
-Large inputs go by reference: `svg_url` for the SVG (e.g. the download link a previous result gave), `image_url` or `upload_id` (from `create_upload`) for rasters, each up to 20 MB; large results come back as one-hour download links.
 ## Steps
 
-1. Identify both the SVG file and the original raster image from the user's request
-2. Read the SVG content
-3. Read and base64-encode the original raster image with its data URL prefix
-4. Call the API:
-
-```bash
-curl -s -X POST "${SVG_NEW_API_URL:-https://svg.new}/api/agent/edit/remove-background" \
-  -H "Authorization: Bearer $SVG_NEW_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d "{\"svg\": \"$SVG_CONTENT\", \"image\": \"$IMAGE_DATA_URL\"}"
-```
-
-5. Extract the `svg` field from the response
-6. Write the background-removed SVG to a file
+1. Identify the SVG and the original raster image it was made from.
+2. Call `remove_background` with:
+   - the SVG as `svg` (its text) or `svg_url` (a public link, such as a download link from an earlier result);
+   - the original image as `image_url` (a public link), `image` (a base64 data URL, for files up to about 100 KB) or `upload_id` (after uploading the file with `create_upload`, up to 20 MB).
+3. Save the background-free SVG. If it came back as a download link, save it with `curl -sL -o <file> "<link>"`.
+4. The result also includes a transparent PNG of the original image; mention it, and save it if the user wants it.
 
 ## Notes
 
-- Costs 1 credit (uses AI background removal)
-- Requires both the SVG and the original raster image that was vectorized
-- The response also includes `transparent_image` (base64 PNG with background removed) for reference
+- Costs 1 credit.
+- Needs both the SVG and the original image it was vectorized from.
