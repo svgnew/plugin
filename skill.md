@@ -21,7 +21,7 @@ Convert raster images (PNG, JPG, WebP) to clean, scalable SVG vectors using the 
 
 The MCP `vectorize` tool takes the image inline as a base64 data URL, which is only practical up to roughly 100 KB (the base64 has to pass through the model). For anything bigger, in order of preference:
 
-- **Upload ticket (any local file, no key)**: call `create_upload`; it returns a curl command and an `upload_id`. Run the command with the file's path (it POSTs the raw bytes to svg.new with the ticket as the only credential), then call `vectorize` (or `remove_background`) with `{ "upload_id": "…" }`. Tickets last 15 minutes, work once, and take PNG, JPEG or WebP up to 2.9 MB. `batch_vectorize` takes `upload_ids`.
+- **Upload (any local file up to 20 MB, no key)**: call `create_upload`; it returns a curl `PUT` command (the file goes straight to svg.new's storage) and an `upload_id`. Run the command with the file's path and its Content-Type, then call `vectorize` with `{ "upload_id": "…" }`. Uploads last 15 minutes and work once; PNG, JPEG or WebP. The result of a storage-backed upload always comes back as a download link. `remove_background` and `batch_vectorize` take `upload_id` / `upload_ids` too, but only up to 2.9 MB (they send the image inline to the API).
 - **`image_url`**: if the image is already at a public HTTPS URL (direct link, no redirect, under 2.9 MB), pass `{ "image_url": "<url>" }` — the server fetches it. Also on `remove_background`; `batch_vectorize` takes `image_urls`.
 - **REST API with curl**: with `SVG_NEW_API_KEY` set, the curl command below builds the base64 in the shell (up to 20 MB).
 
