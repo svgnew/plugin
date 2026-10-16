@@ -72,7 +72,7 @@ Large inputs go by reference (`image_url`, `upload_id`, `svg_url`), and large re
 
 ## Privacy
 
-svg.new processes the images and SVGs you send it to produce your results and keeps your conversion history in your account. See the [privacy policy](https://svg.new/privacy) and [terms](https://svg.new/terms).
+svg.new processes the images and SVGs you send it to produce your results and keeps your conversion history in your account while the account exists. Besides the MCP server at `https://svg.new/api/mcp`, the skills talk to one other address, svg.new's own file storage at `https://my.svg.new`: `create_upload` returns an upload link there for local files, and large results come back as one-hour download links from there. Background removal sends the image to Replicate for processing. Nothing else leaves your machine. See the [privacy policy](https://svg.new/privacy) and [terms](https://svg.new/terms).
 
 ## Support
 
