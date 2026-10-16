@@ -81,5 +81,5 @@ svg.new processes the images and SVGs you send it to produce your results and ke
 ## Links
 
 - [svg.new](https://svg.new) — Web app
-- [API Documentation](https://svg.new/api) — REST API reference
+- [API Documentation](https://svg.new/developers) — REST API reference
 - [Pricing](https://svg.new/pricing) — Plans and credits
