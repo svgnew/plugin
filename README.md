@@ -39,7 +39,7 @@ mkdir -p ~/.claude/skills/svg-new && curl -s https://svg.new/skill.md -o ~/.clau
 
 ## Accounts and credits
 
-Sign up at [svg.new](https://svg.new). Free accounts get 3 vectorizations a day; Pro gets 1,000 a month. Vectorizing and background removal use credits; recoloring and simplifying are free.
+Sign up at [svg.new](https://svg.new). Free accounts get 1 vectorization a day; Pro gets 1,000 a month. Vectorizing and background removal use credits; recoloring and simplifying are free.
 
 ## Available Skills
 

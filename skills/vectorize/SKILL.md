@@ -25,6 +25,6 @@ Don't fall back to a local tracer (vtracer, potrace) unless the user asks for on
 
 ## Notes
 
-- Each vectorization costs 1 credit. Free accounts get 3 a day.
+- Each vectorization costs 1 credit. Free accounts get 1 a day.
 - Pass `output: "url"` to always get a download link instead of inline SVG.
 - The result's ID opens in the editor at `https://svg.new/edit/<id>`.
